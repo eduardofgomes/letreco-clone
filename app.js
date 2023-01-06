@@ -10,7 +10,6 @@ const keysSecondRow = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
 const keysThirdRow = ["Z", "X", "C", "V", "B", "N", "M"];
 
 
-
 const rows = 6;
 const columns = 5;
 
@@ -26,3 +25,17 @@ for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
     }
     tiles.append(tileRow);
 }
+
+const createKeyboardRow = (keys, keyboardRow) => {
+    keys.forEach((key) => {
+        var buttonElement = document.createElement("button");
+        buttonElement.textContent = key;
+        buttonElement.setAttribute("id", key);
+        buttonElement.addEventListener("click", () => console.log("TECLA: ", key ));
+        keyboardRow.append(buttonElement);
+    })
+}
+
+createKeyboardRow(keysFirstRow, keyboardFirstRow)
+createKeyboardRow(keysSecondRow, keyboardSecondRow)
+createKeyboardRow(keysThirdRow, keyboardThirdRow)
