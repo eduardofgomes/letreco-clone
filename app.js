@@ -31,7 +31,7 @@ const createKeyboardRow = (keys, keyboardRow) => {
         var buttonElement = document.createElement("button");
         buttonElement.textContent = key;
         buttonElement.setAttribute("id", key);
-        buttonElement.addEventListener("click", () => console.log("TECLA: ", key ));
+        buttonElement.addEventListener("click", () => console.log("TECLA: ", key));
         keyboardRow.append(buttonElement);
     })
 }
