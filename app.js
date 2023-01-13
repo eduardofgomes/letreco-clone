@@ -15,6 +15,10 @@ const columns = 5;
 let currentRow = 0;
 let currentColumn = 0;
 const letreco = 'VASCO';
+let letrecoMap = {};
+for (let index = 0; index < letreco.length; index) {
+    letrecoMap[letreco[index]] = index;
+}
 const guesses = [];
 
 for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -36,6 +40,29 @@ const checkGuess = () => {
     const guess = guesses[currentRow].join("")
     if(guess.length !== columns) {
         return
+    }
+
+    var currentColumns = document.querySelectorAll(".typing")
+    for(let index = 0; index < columns; index++) {
+        const letter =  guess[index] 
+        if(letrecoMap[letter] === undefined) {
+            currentColumns[index].classList.add("wrong")
+        } else {
+            if(letrecoMap[letter] === index) {
+                currentColumns[letter].classList.add("right")
+            } else {
+                currentColumns[letter].classList.add("displaced")
+            }
+        }
+    }
+
+    if(guess === letreco) {
+        window.alert("Congrats! You beat this game")
+        return
+    } else {
+        if(currentRow === -1) {
+            window.alert("You missed the word")
+        }
     }
 }
 
