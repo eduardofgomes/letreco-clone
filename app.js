@@ -18,7 +18,7 @@ const letreco = 'VASCO';
 let letrecoMap = {};
 for (let index = 0; index < letreco.length; index) {
     letrecoMap[letreco[index]] = index;
-}
+};
 const guesses = [];
 
 for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -34,7 +34,7 @@ for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
         guesses[rowIndex][columnIndex]
     }
     tiles.append(tileRow);
-}
+};
 
 const checkGuess = () => {
     const guess = guesses[currentRow].join("")
@@ -49,9 +49,9 @@ const checkGuess = () => {
             currentColumns[index].classList.add("wrong")
         } else {
             if(letrecoMap[letter] === index) {
-                currentColumns[letter].classList.add("right")
+                currentColumns[index].classList.add("right")
             } else {
-                currentColumns[letter].classList.add("displaced")
+                currentColumns[index].classList.add("displaced")
             }
         }
     }
@@ -62,7 +62,26 @@ const checkGuess = () => {
     } else {
         if(currentRow === -1) {
             window.alert("You missed the word")
+        } else {
+            moveToNextRow()
         }
+    }
+};
+
+const moveToNextRow = () => {
+    var typingColumns = document.querySelectorAll(".typing")
+    for(let index = 0; index < typingColumns.length; index++) {
+        typingColumns[index].classList.remove("typing")
+        typingColumns[index].classList.add("disabled")
+    }
+    currentRow++
+    currentColumn = 0
+
+    const currentRowEl = document.querySelector("#row"+currentRow)
+    var currentColumns = currentRowEl.querySelectorAll(".tile-columns")
+    for(let index = 0; index < currentColumns.length; index++) {
+        typingColumns[index].classList.remove("disable")
+        typingColumns[index].classList.add("typing") 
     }
 }
 
@@ -74,7 +93,7 @@ const handleKeyboardOnClick = (key) => {
     currentTile.textContent = key;
     guesses[currentRow][current] = key
     currentColumn++
-}
+};
 
 const createKeyboardRow = (keys, keyboardRow) => {
     keys.forEach((key) => {
@@ -84,14 +103,22 @@ const createKeyboardRow = (keys, keyboardRow) => {
         buttonElement.addEventListener("click", () => handleKeyboardOnClick(key));
         keyboardRow.append(buttonElement);
     })
-}
+};
 
 createKeyboardRow(keysFirstRow, keyboardFirstRow)
 createKeyboardRow(keysSecondRow, keyboardSecondRow)
 createKeyboardRow(keysThirdRow, keyboardThirdRow)
 
-const handleBackspace = () => console.log("delete")
+const handleBackspace = () => {
+    if(currentColumn === 0) {
+        return
+    }
 
+    currentColumn--
+    guesses[currentRow][currentColumn] = ""
+    const tile = document.querySelector("#row"+currentRow+"column"+currentColumn)
+    tile.textContent = ""
+}
 const backspaceButton = document.createElement("button")
 backspaceButton.addEventListener("click", handleBackspace)
 backspaceButton.innerHTML = "&larr;"
@@ -101,3 +128,14 @@ const enterButton = document.createElement("button")
 enterButton.addEventListener("click", checkGuess)
 enterButton.textContent = "Enter"
 backspaceAndEnterRow.append(enterButton)
+
+document.onkeydown = function (event) {
+    event = event || window.event
+    if(event.key ===  "Enter" ) {
+        checkGuess();
+    } else if (event.key === "Backspace") {
+        handleBackspace();
+    } else {
+        handleKeyboardOnClick(event.key.toUpperCase())
+    }
+}
