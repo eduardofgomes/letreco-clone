@@ -14,23 +14,39 @@ const rows = 6;
 const columns = 5;
 let currentRow = 0;
 let currentColumn = 0;
+const letreco = 'VASCO';
+const guesses = [];
 
 for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
+    guesses[rowIndex] = new Array(columns)
     const tileRow = document.createElement("div");
     tileRow.setAttribute("id", "row"+rowIndex);
     tileRow.setAttribute("class", "tile-row");
     for(let columnIndex = 0; columnIndex < columns; columnIndex++) {
         const tileColumn = document.createElement("div");
         tileColumn.setAttribute("id", "row"+rowIndex+"column"+columnIndex);
-        tileColumn.setAttribute("class", "tile-column");
+        tileColumn.setAttribute("class", rowIndex === 0 ? "tile-column typing" : "tile-column disable");
         tileRow.append(tileColumn);
+        guesses[rowIndex][columnIndex]
     }
     tiles.append(tileRow);
 }
 
+const checkGuess = () => {
+    const guess = guesses[currentRow].join("")
+    if(guess.length !== columns) {
+        return
+    }
+}
+
 const handleKeyboardOnClick = (key) => {
+    if (currentColumn === columns) {
+        return
+    }
     const currentTile = document.querySelector("#row"+currentRow+"column" + currentColumn);
     currentTile.textContent = key;
+    guesses[currentRow][current] = key
+    currentColumn++
 }
 
 const createKeyboardRow = (keys, keyboardRow) => {
@@ -54,9 +70,7 @@ backspaceButton.addEventListener("click", handleBackspace)
 backspaceButton.innerHTML = "&larr;"
 backspaceAndEnterRow.append(backspaceButton)
 
-const handleEnter = () => console.log("Search the word")
-
 const enterButton = document.createElement("button")
-enterButton.addEventListener("click", handleEnter)
+enterButton.addEventListener("click", checkGuess)
 enterButton.textContent = "Enter"
 backspaceAndEnterRow.append(enterButton)
