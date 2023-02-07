@@ -16,9 +16,9 @@ let currentRow = 0;
 let currentColumn = 0;
 const letreco = 'VASCO';
 let letrecoMap = {};
-for (let index = 0; index < letreco.length; index) {
+for (let index = 0; index < letreco.length; index++) {
     letrecoMap[letreco[index]] = index;
-};
+}
 const guesses = [];
 
 for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -29,9 +29,9 @@ for(let rowIndex = 0; rowIndex < rows; rowIndex++) {
     for(let columnIndex = 0; columnIndex < columns; columnIndex++) {
         const tileColumn = document.createElement("div");
         tileColumn.setAttribute("id", "row"+rowIndex+"column"+columnIndex);
-        tileColumn.setAttribute("class", rowIndex === 0 ? "tile-column typing" : "tile-column disable");
+        tileColumn.setAttribute("class", rowIndex === 0 ? "tile-column typing" : "tile-column disabled");
         tileRow.append(tileColumn);
-        guesses[rowIndex][columnIndex]
+        guesses[rowIndex][columnIndex] = "";
     }
     tiles.append(tileRow);
 };
@@ -42,7 +42,7 @@ const checkGuess = () => {
         return
     }
 
-    var currentColumns = document.querySelectorAll(".typing")
+    var currentColumns = document.querySelectorAll(".typing");
     for(let index = 0; index < columns; index++) {
         const letter =  guess[index] 
         if(letrecoMap[letter] === undefined) {
@@ -78,10 +78,10 @@ const moveToNextRow = () => {
     currentColumn = 0
 
     const currentRowEl = document.querySelector("#row"+currentRow)
-    var currentColumns = currentRowEl.querySelectorAll(".tile-columns")
+    var currentColumns = currentRowEl.querySelectorAll(".tile-column")
     for(let index = 0; index < currentColumns.length; index++) {
-        typingColumns[index].classList.remove("disable")
-        typingColumns[index].classList.add("typing") 
+        currentColumns[index].classList.remove("disabled")
+        currentColumns[index].classList.add("typing") 
     }
 }
 
@@ -91,7 +91,7 @@ const handleKeyboardOnClick = (key) => {
     }
     const currentTile = document.querySelector("#row"+currentRow+"column" + currentColumn);
     currentTile.textContent = key;
-    guesses[currentRow][current] = key
+    guesses[currentRow][currentColumn] = key
     currentColumn++
 };
 
@@ -119,6 +119,7 @@ const handleBackspace = () => {
     const tile = document.querySelector("#row"+currentRow+"column"+currentColumn)
     tile.textContent = ""
 }
+
 const backspaceButton = document.createElement("button")
 backspaceButton.addEventListener("click", handleBackspace)
 backspaceButton.innerHTML = "&larr;"
@@ -126,12 +127,12 @@ backspaceAndEnterRow.append(backspaceButton)
 
 const enterButton = document.createElement("button")
 enterButton.addEventListener("click", checkGuess)
-enterButton.textContent = "Enter"
+enterButton.textContent = "ENTER"
 backspaceAndEnterRow.append(enterButton)
 
 document.onkeydown = function (event) {
     event = event || window.event
-    if(event.key ===  "Enter" ) {
+    if(event.key ===  "ENTER" ) {
         checkGuess();
     } else if (event.key === "Backspace") {
         handleBackspace();
